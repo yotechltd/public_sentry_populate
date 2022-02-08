@@ -1,3 +1,5 @@
+const { uploadImage } = require( "../helper/helper" );
+
 const route = require("express").Router();
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
@@ -50,15 +52,26 @@ route.get("/story", async(req,res)=>{
     }
 })
 
-route.post("/upload", async(req,res)=>{
-  try{
-    res.json({
-      "success": true
-    })
-  }catch(error){
-    res.json({
-      error: error.stack
-    })
+const multer = require("multer");
+const { uploader } = require( "../helper" );
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    console.log("hello");
+      cb(null, "upload/");
+  },
+  filename: (req, file, cb) =>{
+    let name = file.originalname.split(".");
+    const ext = name[1];
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix+"."+ext)
   }
 })
+const uploads = multer({ storage: storage });
+
+route.post("/upload", uploads.single('avatar'), function uploadAudio(req, res) {
+  res.json({
+    success: true,
+    body: req.body
+  })
+});
 module.exports = route;
