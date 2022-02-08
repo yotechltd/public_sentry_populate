@@ -50,4 +50,15 @@ route.get("/story", async(req,res)=>{
     }
 })
 
+route.post("/upload", async(req,res)=>{
+  try{
+    res.json({
+      "success": true
+    })
+  }catch(error){
+    res.json({
+      error: error.stack
+    })
+  }
+})
 module.exports = route;
