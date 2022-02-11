@@ -3,7 +3,7 @@ const app = require("express")();
 const cors = require('cors');
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
-
+var jwt = require('jsonwebtoken');
 Sentry.init({ dsn: "https://9ef354132a0444b18606c4cd580a62a3@o990419.ingest.sentry.io/5952302", integrations: [
   new Sentry.Integrations.Http({ tracing: true }),
   new Tracing.Integrations.Express({
@@ -33,11 +33,12 @@ const algoRouter = require('./routes/algo.route');
 const fs = require("fs");
 const sharp = require('sharp');
 
-app.listen(4000,(err)=>{
-    console.log(!err ? "4000" : "error");
+app.listen(8000,(err)=>{
+    console.log(!err ? "8000" : "error");
 });
 
-const multer  = require('multer')
+const multer  = require('multer');
+const req = require( "express/lib/request" );
 const upload = multer({ dest: 'uploads/' })
 app.post('/upload', upload.single('avatar'), function (req, res, next) {
   // req.file is the `avatar` file
@@ -78,4 +79,20 @@ app.get("/", cors(), async(req,res)=>{
     return !err ? console.log("Success") : console.log("err",err);
   });
   res.json({"file":"file","newDate":"Success"});
+})
+app.post("/auth", async(req,res)=>{
+  try{
+    let token = req.body.token;
+    var decoded = jwt.verify(token, 'secret');
+    //{ algorithm: 'RS256'}
+    console.log(decoded)
+    return res.json({
+      "decoded": decoded
+    })
+  }catch(error){
+    console.log(error);
+    res.json({
+      error
+    })
+  }
 })
