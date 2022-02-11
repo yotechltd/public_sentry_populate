@@ -1,3 +1,4 @@
+const { Router } = require( 'express' );
 const { binarySearch, exceptionalSearch } = require( '../controller/main.controller' );
 
 const route = require('express').Router()
@@ -15,7 +16,67 @@ route.post('/exceptional-search',(req,res)=>{
    object = exceptionalSearch(arr, arr.length, req.body.f);
   return res.json(object);
 })
+route.get('/arraymap', (req,res)=>{
+  try{
+    let lastOne= require("./production.json");
+    let   firstOne= require("./dev.json");
+    let notMatched = firstOne.filter(o=> {
+      let index = lastOne.findIndex(i => o==i);
+      if(index == -1){
+        return o;
+      }
+    })
+    return res.json({
+      notMatched
+    })
+  }catch(error){
+    res.json(error);
+  }
+})
 
+route.get("/max", (req,res)=>{
+  try{
+    let caps = req.body.caps,
+      isFalse = false,
+      length = caps.length,
+      big=0,
+      small=0;
+    for(i=0;i<length;i++){
+      if(i!=0){
+        if(caps[i]>=65 && caps[i]<=90){
+          caps[i] = caps[i]+32;
+          big++;
+        }else{
+          small++;
+        }
+      }else{
+        if(caps[i]>=97 && caps[i]<=122){
+          caps[i] = caps[i]-32;
+        }else{
+          big++;
+          small++;
+        }
+      }
+    }
+    return res.json({
+      value: caps
+    });
+    // let a = req.body.a,
+    // total = req.body.total,
+    // middle = total/2,
+    // i = 0,
+    // b=0;
+    // for(i=0;b<=middle; i++){
+    //   b+=a[i];
+    // }
+    // console.log(i);
+    // return res.json({
+    //   map: i
+    // })
+  }catch(error){
+    res.json(error);
+  }
+})
 
 
 module.exports = route;
