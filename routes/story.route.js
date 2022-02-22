@@ -43,17 +43,20 @@ route.get("/person",async(req,res)=>{
     res.json({"body":person})
 })
 
-route.get("/story", async(req,res)=>{
+route.get("/story", async(req,res,next)=>{
     try{
-      let story = await Story.find().populate("_creator fans");
-      res.json({"body":story});
-    }catch(err){
-      res.json({"error":err})
+      let story = await Story.findOne({}).select({"body": "$title", creator: "$_creator"})
+      
+      res.json({"body":storys});
+      next();
+    }catch(error){
+      res.status(500).json({"error":error.stack})
     }
 })
 
 const multer = require("multer");
 const { uploader } = require( "../helper" );
+const { translateAliases } = require("../models/geo");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     console.log("hello");

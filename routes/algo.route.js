@@ -40,22 +40,26 @@ route.get("/max", (req,res)=>{
       isFalse = false,
       length = caps.length,
       big=0,
-      small=0;
+      small=0,
+      pro;
     for(i=0;i<length;i++){
       if(i!=0){
         if(caps[i]>=65 && caps[i]<=90){
-          caps[i] = caps[i]+32;
+          pro[i] = caps[i]+32;
           big++;
         }else{
           small++;
         }
       }else{
         if(caps[i]>=97 && caps[i]<=122){
-          caps[i] = caps[i]-32;
+          pro[i] = caps[i]-32;
         }else{
           big++;
           small++;
         }
+      }
+      if(big == length-1){
+        console.log(pro);
       }
     }
     return res.json({

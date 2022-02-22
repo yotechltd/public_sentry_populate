@@ -3,6 +3,8 @@ const app = require("express")();
 const cors = require('cors');
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
+const { Logtail } = require("@logtail/node");
+const logtail = new Logtail("HDatMw64dqfQipvYw99n3dUE");
 var jwt = require('jsonwebtoken');
 Sentry.init({ dsn: "https://9ef354132a0444b18606c4cd580a62a3@o990419.ingest.sentry.io/5952302", integrations: [
   new Sentry.Integrations.Http({ tracing: true }),
@@ -11,9 +13,29 @@ Sentry.init({ dsn: "https://9ef354132a0444b18606c4cd580a62a3@o990419.ingest.sent
   })
 ],
 tracesSampleRate: 1.0,});
+// app.use(Sentry.Handlers.errorHandler({
+//   shouldHandleError(error) {
+//     // Capture all 404 and 500 errors
+//     // if (error.status === 404 || error.status === 500) {
+//     //   return true;
+//     // }
+//     console.log(error);
+//     return true;
+//   },
+// }));
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 app.use(Sentry.Handlers.errorHandler());
+// app.use(function onError(err, req, res, next){
+//   console.log(err);
+//   // The error id is attached to `res.sentry` to be returned
+//   // and optionally displayed to the user for support.
+//   res.statusCode = 500;
+//   console.log(res);
+//   res.end("I got error " + res.sentry + " ");
+// });
+
+
 require("./db");
 app.use(cors());
 app.all('*', function(req, res, next) {
@@ -80,14 +102,17 @@ app.get("/", cors(), async(req,res)=>{
 app.post("/auth", async(req,res)=>{
   try{
     let token = req.body.token;
-    var decoded = jwt.verify(token, 'secret');
+    logtail.info(`GeneratedToken ${token}`);
+    logtail.info("Printed token");
+    logtail.log(token);
+    //var decoded = jwt.verify(token, 'secret');
     //{ algorithm: 'RS256'}
     console.log(decoded)
     return res.json({
       "decoded": decoded
     })
   }catch(error){
-    console.log(error);
+    logtail.error(error);
     res.json({
       error
     })

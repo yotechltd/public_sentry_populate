@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@logtail/core": "^0.1.10",
+    "@logtail/node": "^0.1.10",
     "@sentry/node": "^6.13.2",
     "@sentry/tracing": "^6.13.2",
     "body-parser": "^1.19.0",
