@@ -77,6 +77,9 @@ route.post("/upload", uploads.single('avatar'), function uploadAudio(req, res) {
     body: req.body
   })
 });
+const bottomBannerController = require("../controller/bottombanner.controller");
 route.put("/delivery", deliveryController.updateDelivery);
 route.get("/delivery", deliveryController.calculateDeliveryCharge);
+route.put("/bottom-banner", bottomBannerController.updateBottomBanner);
+route.get("/bottom-banner", bottomBannerController.getBanner);
 module.exports = route;
