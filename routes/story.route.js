@@ -1,5 +1,5 @@
 const { uploadImage } = require( "../helper/helper" );
-
+const deliveryController = require("../controller/delivery.controller");
 const route = require("express").Router();
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
@@ -77,4 +77,6 @@ route.post("/upload", uploads.single('avatar'), function uploadAudio(req, res) {
     body: req.body
   })
 });
+route.put("/delivery", deliveryController.updateDelivery);
+route.get("/delivery", deliveryController.calculateDeliveryCharge);
 module.exports = route;
