@@ -75,3 +75,38 @@ class BannerController{
 }
 
 module.exports = new BannerController();
+
+{
+    const moment = require('moment');
+console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+var converter = require('hex2dec');
+
+let date = moment();
+// let day = date.format('DD');
+let year = date.format('YYYY');
+let month = Number(date.format('MM'));
+let day = Number(date.format('DD'));
+let hour = Number(date.format('HH'));
+let min = date.format('mm');
+let second = date.format('ss');
+let mlSecond = date.milliseconds();
+let a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+let b = 'asdfghjklopXYZESTFmnbvcxOPQzqwertyui';
+let fy = year.slice(0, 2);
+let ly = year.slice(2, 4);
+
+let value =
+  Number(ly) +
+  19 +
+  fy +
+  a[month] +
+  b[day] +
+  a[hour] +
+  converter.decToHex(min) +
+  second +
+  mlSecond;
+console.log(fy);
+console.log(value);
+console.log(typeof year);
+
+}
