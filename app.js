@@ -43,7 +43,7 @@ app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(bodyParser.json())
@@ -58,10 +58,67 @@ const sharp = require('sharp');
 app.listen(8000,(err)=>{
     console.log(!err ? "8000" : "error");
 });
+const fileUpload = require("express-fileupload");
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+}));
+
+app.post('/upload', (req,res,next)=>{
+  try{
+    file = req.files.file;
+    console.log(__dirname);
+    const fs = require('fs');
+
+    // directory to check if exists
+    const dir =  __dirname + '/temp/1';
+
+    // check if directory exists
+    if (fs.existsSync(dir)) {
+      console.log(fs.existsSync(dir));
+        console.log('Directory exists!');
+    } else {
+        console.log(fs.existsSync(dir));
+        fs.mkdirSync(dir);
+        console.log('Directory not found.');
+    }
+    uploadPath = __dirname + '/temp/1/' + file.name;
+    console.log(uploadPath)
+    // Use the mv() method to place the file somewhere on your server
+    file.mv(uploadPath, function(err) {
+      if (err)
+        return res.status(500).send(err);
+
+      res.send('File uploaded!');
+    });
+  }catch(error){
+    return res.json({
+      message: error.message,
+      error: error.stack
+    })
+  }
+})
+
+var fse = require('fs-extra');
+
+app.post("/move",(req,res)=>{
+  try{
+    fse.move(__dirname+"/temp/1/", __dirname+'/upload/1/', function (err) {
+      if (err) return console.error(err)
+      fs.rmSync(__dirname+"/temp/1/", { recursive: true, force: true });
+      res.json({
+        success: true,
+        message: "removed"
+      })
+    })
+  }catch(error){
+    res.json({error: error.stack})
+  }
+})
+
 
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' })
-app.post('/upload', upload.single('avatar'), function (req, res, next) {
+app.post('/allmulterupload', upload.single('avatar'), function (req, res, next) {
   res.json({
     "success": true,
     "for": req.body.name
