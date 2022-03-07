@@ -58,6 +58,10 @@ const sharp = require('sharp');
 app.listen(8000,(err)=>{
     console.log(!err ? "8000" : "error");
 });
+
+
+/// ******************   File upload  start  **************
+
 const fileUpload = require("express-fileupload");
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
@@ -100,6 +104,7 @@ app.post('/upload', (req,res,next)=>{
 
 var fse = require('fs-extra');
 
+/// ******************   Move File from one folder to another  **************
 app.post("/move",(req,res)=>{
   try{
     fse.move(__dirname+"/temp/1/", __dirname+'/upload/1/', function (err) {
@@ -114,7 +119,7 @@ app.post("/move",(req,res)=>{
     res.json({error: error.stack})
   }
 })
-
+/// ******************   End of File upload   **************
 
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' })
