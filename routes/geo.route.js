@@ -33,6 +33,27 @@ route.get("/", async(req,res)=>{
   }
 })
 
+route.get('/file', async(req,res,next)=>{
+  try{
+    const fs = require("fs");
+    const file = fs.readFileSync(__dirname+"/../image.jpeg");
+    const details = fs.statSync(__dirname+"/../image.jpeg");
+    console.log("file size is : ", (details.size/1024).toFixed(2) + "KB");
+  //   fs.stat(__dirname+"/../image.jpeg", (err, stats) => {
+  //     if (err) {
+  //         console.log(`File doesn't exist.`);
+  //     } else {
+  //         stats.size / 1024;
+  //     }
+  // });
+    console.log(file);
+    res.json({"p": "hello"})
+  }catch(err){
+    console.log(err);
+    res.json({"error": err})
+  }
+})
+
 //http://api.weatherstack.com/forecast?access_key=3360e9cdb3d1f86aa4c37fc51672ff91&query=New York
 //const key = 'AIzaSyB3fzeCZKjCEOl74s33u5yUcFx5lRutehM'; AIzaSyB9WnvVn8B6d03-OTdM9l1yyoXVE9Ikqbs
 module.exports = route;
