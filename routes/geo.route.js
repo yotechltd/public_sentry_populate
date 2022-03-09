@@ -1,5 +1,6 @@
 const route = require('express').Router();
 const Geo = require('../models/geo');
+const sharp = require('sharp');
 route.post("/", async(req,res)=>{
   try{
     let value = {
@@ -38,6 +39,7 @@ route.get('/file', async(req,res,next)=>{
     const fs = require("fs");
     const file = fs.readFileSync(__dirname+"/../image.jpeg");
     const details = fs.statSync(__dirname+"/../image.jpeg");
+    //console.log(details);
     console.log("file size is : ", (details.size/1024).toFixed(2) + "KB");
   //   fs.stat(__dirname+"/../image.jpeg", (err, stats) => {
   //     if (err) {
@@ -47,6 +49,14 @@ route.get('/file', async(req,res,next)=>{
   //     }
   // });
     console.log(file);
+    sharp(file)
+      .jpeg({ quality: 50, progressive: true, force: false })
+      .png({ progressive: true, force: false })
+      .toBuffer()
+      .then( data => { 
+        console.log(data);
+        fs.writeFileSync(__dirname+"/../images.jpeg", data) })
+      .catch( err => { console.log(err) });
     res.json({"p": "hello"})
   }catch(err){
     console.log(err);
