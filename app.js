@@ -152,6 +152,7 @@ app.post("/profile", uploads.single("avator"),(req,res,next)=>{
 app.use('/geo', cors(), geoRouter);
 app.use('/story', cors(), storyRouter);
 app.use('/algo', cors() , algoRouter);
+app.use('/money/', cors(), require("./routes/money"));
 app.get("/", cors(), async(req,res)=>{
   let file = fs.readFileSync("./image.jpeg");
   console.log(file);
