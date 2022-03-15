@@ -38,8 +38,9 @@ route.post("/story", async(req,res)=>{
 })
 
 route.get("/person",async(req,res)=>{
-    let person = await Person.findOne({_id:0}).populate({path:"stories", populate: { path: '_creator fans', populate:{ path:"stories", populate: { path: '_creator fans', populate:{ path:"stories", populate: { path: '_creator fans', populate:{ path:"stories"}}}}}}});
-    person.populated('fans');
+    //let person = await Person.find({}).populate({path:"stories", populate: { path: '_creator fans', populate:{ path:"stories", populate: { path: '_creator fans', populate:{ path:"stories", populate: { path: '_creator fans', populate:{ path:"stories"}}}}}}});
+    //person.populated('fans');
+    let person = await Person.find({_id: 0}).populate({path:"stories"});
     res.json({"body":person})
 })
 

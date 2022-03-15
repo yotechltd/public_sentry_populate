@@ -149,6 +149,7 @@ app.post("/profile", uploads.single("avator"),(req,res,next)=>{
     for: req.body.name
   })
 })
+app.use('/test', cors(), require("./routes/test.route"));
 app.use('/geo', cors(), geoRouter);
 app.use('/story', cors(), storyRouter);
 app.use('/algo', cors() , algoRouter);
