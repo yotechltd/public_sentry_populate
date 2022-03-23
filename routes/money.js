@@ -61,6 +61,10 @@ route.get("/spent-money", async(req,res)=>{
 route.get('/history', async(req,res)=>{
     try{
         let data = await mongoose.connection.db.collection("spentmoneys").aggregate([{
+            $match: {
+                type: "regular"
+            }
+        },{
             $group: {
                 _id: {
                     date: "$date",
